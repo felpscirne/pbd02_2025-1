@@ -13,11 +13,11 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE PROCEDURE register_order(
+CREATE OR REPLACE FUNCTION register_order_and_get_id( 
     p_customer_id INTEGER,
     p_items JSONB
 )
-AS $$
+RETURNS INTEGER AS $$ 
 DECLARE
     v_order_id INTEGER;
     v_item RECORD;
@@ -33,7 +33,7 @@ BEGIN
     BEGIN
         INSERT INTO orders (customer_id, status_id, total_amount)
         VALUES (p_customer_id, v_pending_status_id, 0.00)
-        RETURNING id INTO v_order_id;
+        RETURNING id INTO v_order_id; -- Captura o ID do pedido criado
 
         FOR v_item IN SELECT * FROM jsonb_to_recordset(p_items) AS x(menu_item_id INTEGER, quantity INTEGER)
         LOOP
@@ -45,21 +45,19 @@ BEGIN
                 RAISE EXCEPTION 'Menu item with ID % not found.', v_item.menu_item_id;
             END IF;
 
-            --  trg_validate_stock
             INSERT INTO order_items (order_id, menu_item_id, quantity, unit_price)
             VALUES (v_order_id, v_item.menu_item_id, v_item.quantity, v_item_price);
         END LOOP;
 
-        -- valor total do pedido após todos os itens serem inseridos
         UPDATE orders
         SET total_amount = calculate_order_total(v_order_id)
         WHERE id = v_order_id;
 
     EXCEPTION
         WHEN OTHERS THEN
-            -- se erros (incluindo erro da trigger de estoque), a transação será revertida
             RAISE EXCEPTION 'Error registering order: %', SQLERRM;
     END;
+    RETURN v_order_id; 
 END;
 $$ LANGUAGE plpgsql;
 
@@ -83,7 +81,7 @@ BEGIN
     FROM orders o
     JOIN users u ON o.customer_id = u.id
     JOIN order_statuses os ON o.status_id = os.id
-    WHERE os.status_name ILIKE p_status_name;
+    WHERE p_status_name IS NULL OR os.status_name ILIKE p_status_name; 
 END;
 $$ LANGUAGE plpgsql;
 
@@ -95,7 +93,6 @@ DECLARE
     v_new_status_id INTEGER;
     v_current_status_name VARCHAR(50);
 BEGIN
-    -- obtem status e id do pedido atual
     SELECT o.status_id, os.status_name
     INTO v_current_status_id, v_current_status_name
     FROM orders o
@@ -111,10 +108,6 @@ BEGIN
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Status "%" is not a valid status.', p_new_status_name;
     END IF;
-
-    -- A validação da transição de status será feita por um trigger (trg_validate_status_transition)
-    -- O log de alteração será feito por um trigger (trg_log_change)
-    -- O log de cancelamento será feito por um trigger (trg_log_cancellation)
 
     UPDATE orders
     SET

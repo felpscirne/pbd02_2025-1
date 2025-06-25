@@ -1,3 +1,9 @@
+# Arquivos de ambiente virtual Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
 # Logs
 logs
 *.log
@@ -22,3 +28,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
