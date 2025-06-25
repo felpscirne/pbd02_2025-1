@@ -1,8 +1,53 @@
+import Header from "../components/Header";
+import SplitText from "../components/SplitText";
+import Hamburger from "../assets/hamburger.png";
+import { ButtonLink } from "../components/Button";
 
 function Home() {
   return (
-    <div>home</div>
+    <>
+      <Header></Header>
+      <main className="h-full w-full flex items-center align-middle justify-center pt-30 flex-col gap-10">
+        <SplitText
+            text="Bem"
+            className="text-7xl font-semibold text-center text-primaryBrown-900 font-press"
+            delay={100}
+            duration={2}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 40 }}
+            to={{ opacity: 1, y: 0 }}
+            threshold={0.1}
+            rootMargin="-200px"
+            textAlign="center"
+        />
+        <SplitText
+            text="Vindo"
+            className="text-7xl font-semibold text-center text-primaryBrown-900 font-press"
+            delay={500}
+            duration={2}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 40 }}
+            to={{ opacity: 1, y: 0 }}
+            threshold={0.1}
+            rootMargin="-200px"
+            textAlign="center"
+        />
+        <div className="p-1 flex items-center justify-center">
+          <img src={Hamburger} width={300}></img>
+        </div>
+        <div className="flex gap-10">
+
+          <ButtonLink to="/pedidos" text="Pedir"></ButtonLink>
+          <ButtonLink to="/pedidos" text="??"></ButtonLink>
+
+        </div>
+
+      </main>
+    </>
   )
+
 }
 
 export default Home;

@@ -1,8 +1,13 @@
+import Header from "../components/Header";
 
 function Pedidos() {
   return (
-    <div>Pedidos</div>
+    <>
+        <Header></Header>
+        <div>Pedidos</div>
+    </>
+
   )
 }
 
-export default Pedidos
+export default Pedidos;
