@@ -2,43 +2,35 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
-from psycopg2 import extras # Para usar o RealDictCursor
-import json # Para lidar com JSON para as stored procedures
-from config import Config # Importa a classe de configuração
+from psycopg2 import extras 
+import json 
+from config import Config 
 
 app = Flask(__name__)
-app.config.from_object(Config) # Carrega as configurações da classe Config
+app.config.from_object(Config) 
 
-# Configura o CORS para permitir requisições do seu frontend React.
-# Permite todos os métodos (GET, POST, PUT, etc.) e cabeçalhos em todas as rotas de /api/
+
 CORS(app, resources={r"/api/*": {"origins": Config.CORS_ORIGINS}})
 
 def get_db_connection():
-    """
-    Função para estabelecer a conexão com o banco de dados PostgreSQL.
-    Utiliza a URL de conexão definida em config.py.
-    """
+ 
     try:
         conn = psycopg2.connect(Config.DATABASE_URL)
         return conn
     except Exception as e:
         print(f"Erro ao conectar ao banco de dados: {e}")
-        # Em um ambiente de produção, você pode querer logar isso e não retornar None,
-        # mas lançar uma exceção ou ter um tratamento mais robusto.
+       
         return None
 
 # --- ROTAS DA API ---
 
 @app.route('/api/cardapio', methods=['GET'])
 def get_cardapio():
-    """
-    Retorna todos os itens do cardápio.
-    """
+    
     conn = get_db_connection()
     if conn is None:
         return jsonify({"error": "Falha ao conectar ao banco de dados"}), 500
     try:
-        # Usa RealDictCursor para retornar linhas como dicionários, facilitando a conversão para JSON.
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cur.execute("SELECT id, name, description, price, is_available FROM menu_items ORDER BY name;")
         itens = cur.fetchall()
@@ -55,24 +47,16 @@ def listar_pedidos_api():
     Lista pedidos, opcionalmente filtrando por status.
     Chama a função list_orders do PostgreSQL.
     """
-    status = request.args.get('status') # Obtém o parâmetro 'status' da URL (ex: /api/pedidos?status=Pending)
+    status = request.args.get('status') 
     conn = get_db_connection()
     if conn is None:
         return jsonify({"error": "Falha ao conectar ao banco de dados"}), 500
     try:
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         if status:
-            # Sua função list_orders no PG espera o nome do status.
             cur.execute("SELECT * FROM list_orders(%s);", (status,))
         else:
-            # Se nenhum status for fornecido, você pode listar todos (se sua função PG permitir NULL)
-            # Ou retornar um erro, dependendo da sua regra de negócio.
-            # No seu SQL, list_orders espera um LIKE, então NULL não funcionaria bem.
-            # Se quiser listar todos, crie uma função PG sem parâmetro, ou adapte esta.
-            # Por simplicidade, vamos exigir status por enquanto, ou adaptar para um status padrão.
-            # Para o momento, se status é None, retornaremos todos (assumindo que sua list_orders pode lidar com p_status_name IS NULL ou '%').
-            # Se não, descomente a linha abaixo e remova a que chama com NULL.
-            # return jsonify({"error": "Parâmetro 'status' é obrigatório."}), 400
+            
             cur.execute("SELECT * FROM list_orders('%');") # Lista todos se a função PG usar ILIKE '%'
             
         pedidos = cur.fetchall()
@@ -87,7 +71,7 @@ def listar_pedidos_api():
 def criar_novo_pedido():
     """
     Cria um novo pedido com os itens fornecidos.
-    Chama a stored procedure register_order do PostgreSQL.
+    Chama a stored procedure register_order do postgres
     """
     data = request.get_json()
     cliente_id = data.get('cliente_id')
@@ -135,7 +119,7 @@ def atualizar_status_pedido(pedido_id):
 
     conn = get_db_connection()
     if conn is None:
-        return jsonify({"error": "Falha ao conectar ao banco de dados"}), 500
+        return jsonify({"e rror": "Falha ao conectar ao banco de dados"}), 500
 
     try:
         cur = conn.cursor()
@@ -162,8 +146,7 @@ def get_detalhes_pedido(pedido_id):
         return jsonify({"error": "Falha ao conectar ao banco de dados"}), 500
     try:
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        # Consulta para obter detalhes do pedido e agregar os itens relacionados.
-        # Assumindo que 'users' tem 'name' e 'order_statuses' tem 'status_name'
+       
         cur.execute("""
             SELECT
                 o.id AS pedido_id,
@@ -204,7 +187,7 @@ def get_detalhes_pedido(pedido_id):
         print(f"Erro ao buscar detalhes do pedido: {e}")
         return jsonify({"error": "Erro ao buscar detalhes do pedido"}), 500
 
-# Rota para logar usuários (exemplo, você precisará implementar a lógica de autenticação)
+gi
 @app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()

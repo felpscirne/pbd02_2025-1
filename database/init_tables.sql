@@ -1,3 +1,8 @@
+DROP DATABASE IF EXISTS garciatec;
+CREATE DATABASE garciatec;
+
+\c garciatec;
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
