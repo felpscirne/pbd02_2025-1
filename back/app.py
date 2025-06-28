@@ -187,7 +187,6 @@ def get_detalhes_pedido(pedido_id):
         print(f"Erro ao buscar detalhes do pedido: {e}")
         return jsonify({"error": "Erro ao buscar detalhes do pedido"}), 500
 
-gi
 @app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
