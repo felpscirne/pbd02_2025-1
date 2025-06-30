@@ -5,6 +5,7 @@ import Home from "./pages/Home.tsx";
 import Pedidos from './pages/Pedidos.tsx';
 import Page404 from './pages/404.tsx';
 import Cardapio from './pages/Cardapio.tsx';
+import PedidoDetalhes from './pages/PedidoDetalhado.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path="/pedidos" element={<Pedidos/>} />
       <Route path="/*" element={<Page404/>} />
       <Route path="/cardapio" element={<Cardapio/>} />    
+      <Route path="/pedidos/:id" element={<PedidoDetalhes/>} />
       
     </Routes>
   </BrowserRouter>

@@ -2,12 +2,13 @@ import Header from "../components/Header";
 import SplitText from "../components/SplitText";
 import Hamburger from "../assets/hamburger.png";
 import { ButtonLink } from "../components/Button";
+import Footer from "../components/Footer";
 
 function Home() {
   return (
     <>
       <Header></Header>
-      <main className="h-full w-full flex items-center align-middle justify-center pt-30 flex-col gap-10">
+      <main className="h-cover w-full flex items-center align-middle justify-center pt-30 flex-col gap-2">
         <SplitText
             text="Bem"
             className="text-7xl font-semibold text-center text-primaryBrown-900 font-press"
@@ -34,17 +35,18 @@ function Home() {
             rootMargin="-200px"
             textAlign="center"
         />
-        <div className="p-1 flex items-center justify-center">
+        <div className="p-1 mt-3 flex items-center justify-center animate-bounce pt-10" style={{ animationDuration: "2s" }}>
           <img src={Hamburger} width={300}></img>
         </div>
-        <div className="flex gap-10">
+        <div className="flex gap-10 mb-30">
 
           <ButtonLink to="/pedidos" text="Pedir"></ButtonLink>
-          <ButtonLink to="/pedidos" text="??"></ButtonLink>
+          <ButtonLink to="/pedidos/:id" text="??"></ButtonLink>
 
         </div>
 
       </main>
+      <Footer></Footer>
     </>
   )
 

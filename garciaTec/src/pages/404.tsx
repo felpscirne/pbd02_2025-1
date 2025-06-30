@@ -1,13 +1,20 @@
 import Header from "../components/Header";
 import Fairy from "../assets/fairy.png";
+import Footer from "../components/Footer";
 
 function Page404() {
   return (
     <>
-        <Header></Header>
-        <div className="flex py-30 justify-center items-center">
-            <img src={Fairy} width='760px' ></img>
-        </div>
+    <Header></Header>
+    <main className="md:min-h-200 min-h-112 flex flex-col">
+      <div className="flex justify-center items-end relative">
+        <img src={Fairy} width="760px" className="absolute md:top-34 top-14"/>
+      </div>
+    </main>
+    <Footer />
+
+
+
     </>
   )
 }
