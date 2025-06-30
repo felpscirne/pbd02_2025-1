@@ -66,45 +66,42 @@ Certifique-se de ter instalado:
 
 * **Git**
 * **Python 3.8+** e **pip**
-* **Node.js** e **vite**
+* **Node.js** e **Npm**
 * **PostgreSQL** (Servidor de Banco de Dados)
 * **Cliente `psql`** (geralmente vem com a instalação do PostgreSQL)
 
-### 2. Execução Automatizada com `start_app.sh`
+### 2. Instalação de dependencias
 
-Para levantar toda a aplicação (preparar o banco, iniciar o backend Flask e o frontend React), utilize o script `start_app.sh`.
+Para criar o banco e instalar todas as dependencias da aplicação, utilize o script `install.sh`.
 
-1.  **Navegue até o diretório raiz do projeto** no seu terminal (onde o `start_app.sh` está localizado).
-2.  **Conceda permissões de execução ao script (se necessário):**
+1.  **Navegue até o diretório raiz do projeto** no seu terminal (onde o `install.sh` está localizado).
+2.  **Conceda permissões de execução ao script:**
     ```bash
-    chmod +x start_app.sh
+    chmod +x install.sh
     ```
-3.  **Ajuste as variáveis de ambiente e credenciais:**
-    * No script `start_app.sh`, revise e ajuste `DB_USER`, `DB_HOST`, `DB_NAME` conforme suas configurações do PostgreSQL.
-    * No arquivo `back/.env`, certifique-se de que a `DATABASE_URL` e `CORS_ORIGINS` estão corretas para seu ambiente.
-4.  **Execute o script:**
+3.  **Execute o script:**
     ```bash
-    ./start_app.sh
+    ./install.sh
     ```
     O script irá:
-    * Dropar e recriar o banco de dados `garciatec` (apagando dados anteriores).
+    * Logar no usuario postgres (irá pedir por senha) dropar e recriar o banco de dados `garciatec`
     * Executar todos os scripts SQL (`init_tables.sql`, `functions_procedures.sql`, `triggers.sql`, `seed_data.sql`).
-    * Ativar o ambiente virtual Python e iniciar o servidor Flask em segundo plano.
-    * Instalar dependências (se descomentado no script) e iniciar o servidor de desenvolvimento React com Vite em segundo plano.
+    * Instalar dependências
 
+    Você verá mensagens no terminal sobre o progresso de cada etapa e os PIDs dos processos do Flask e React.
+    
+#### **Agora é só voltar pra pasta raiz, dar a permissão de execução com chmod +x, e rodar o run.sh:**
+ ```bash
+    chmod +x run.sh
+    ./run.sh
+ ```
     Você verá mensagens no terminal sobre o progresso de cada etapa e os PIDs dos processos do Flask e React.
 
 ### 3. Acessando a Aplicação
 
 * **Backend Flask:** `http://localhost:5000`
-* **Frontend React:** `http://localhost:5173` (Esta é a porta padrão do Vite para desenvolvimento).
+* **Frontend React:** `http://localhost:3001`
 
-### 4. Parando a Aplicação
-
-Para parar os processos do Flask e React iniciados pelo `start_app.sh`, você pode:
-
-* Usar os PIDs exibidos pelo script ao iniciar (ex: `kill <FLASK_PID> <REACT_PID>`).
-* Ou usar comandos para matar processos pelo nome (menos preciso): `pkill -f python3` e `pkill -f node`.
 
 ## 🚦 Rotas da API (Backend Flask)
 
