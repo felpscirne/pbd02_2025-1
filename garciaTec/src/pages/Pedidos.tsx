@@ -19,14 +19,19 @@ const Pedidos = () => {
   useEffect(() => {
     fetch("http://localhost:5000/api/pedidos")
       .then((res) => res.json())
-      .then((data) => setPedidos(data.reverse()))
+      .then((data) => {
+        const sorted = data.sort(
+          (a, b) => new Date(b.order_date).getTime() - new Date(a.order_date).getTime()
+        );
+        setPedidos(sorted);
+      })
       .catch((err) => console.error("Erro ao buscar pedidos:", err));
   }, []);
 
   return (
     <>
       <Header></Header>
-      <div className="px-14 pt-10 flex flex-col gap-2 items-center font-press">
+      <div className="px-14 pt-10 flex flex-col gap-2 items-center font-press min-h-screen">
         <h1 className="text-4xl font-bold mb-8 font-press text-primaryBrown-900">Lista de Pedidos</h1>
         <div className="grid gap-10 md:min-w-200 xl:min-w-300 text-1xl">
           {pedidos.map((pedido) => (
@@ -41,7 +46,9 @@ const Pedidos = () => {
                 <p><strong>Total:</strong> R$ {pedido.total_amount}</p>
               </div>
               <button
-                onClick={() => navigate(`/pedidos/${pedido.id}`)}
+                onClick={() =>
+                    navigate(`/pedidos/${pedido.id}`)
+                  }
                 className="bg-primaryBrown-900 text-white px-6 py-2 hover:bg-amber-800 transition cursor-pointer"
               >
                 Ver detalhes

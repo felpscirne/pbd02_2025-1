@@ -40,8 +40,8 @@ function Home() {
         </div>
         <div className="flex gap-10 mb-30">
 
-          <ButtonLink to="/pedidos" text="Pedir"></ButtonLink>
-          <ButtonLink to="/pedidos/:id" text="??"></ButtonLink>
+          <ButtonLink to="/cardapio" text="Cardapio"></ButtonLink>
+          <ButtonLink to="/pedidos" text="Pedidos"></ButtonLink>
 
         </div>
 

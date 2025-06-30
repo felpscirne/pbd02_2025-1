@@ -53,7 +53,6 @@ function Cardapio() {
       const result = await response.json();
   
       if (response.ok) {
-        alert("foi porraaaaaaaa");
         setSelectedIds([]);
   
           navigate(`/pedidos/`);
@@ -129,7 +128,7 @@ function Cardapio() {
   return (
     <>
       <Header />
-      <div className="flex flex-col lg:flex-row gap-4 px-14 pt-10 pb-10 justify-center items-center">
+      <div className="flex flex-col lg:flex-row gap-4 px-14 pt-10 pb-10 justify-center items-center min-h-screen">
         <main className="flex flex-col justify-center items-center">
           <div className="flex flex-col lg:flex-row justify-center w-full">
             <input

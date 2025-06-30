@@ -31,9 +31,9 @@ function Header() {
 
           {menuOpen && (
         <nav className="md:hidden bg-primaryBrown-900 text-white absolute left-0 top-20 w-full py-5 px-10 flex justify-center gap-10 transition-all z-100 text-4xl ease-in-out">
-          <Link to={'/home'} onClick={() => setMenuOpen(false)} className='hover:text-neutral-900 hover:font-[600]'>Home</Link>
+          <Link to={'/'} onClick={() => setMenuOpen(false)} className='hover:text-neutral-900 hover:font-[600]'>Home</Link>
           <Link to={'/cardapio'} onClick={() => setMenuOpen(false)} className='hover:text-neutral-900 hover:font-[600]' >Pedidos</Link>
-          <Link to={'/about'} onClick={() => setMenuOpen(false)} className='hover:text-neutral-900 hover:font-[600]'>Cardapio</Link>
+          <Link to={'/pedidos'} onClick={() => setMenuOpen(false)} className='hover:text-neutral-900 hover:font-[600]'>Cardapio</Link>
         </nav>
       )}
 
