@@ -1,3 +1,5 @@
+\c garciatec;
+
 CREATE OR REPLACE FUNCTION calculate_order_total(p_order_id INTEGER)
 RETURNS DECIMAL(10, 2) AS $$
 DECLARE
@@ -13,7 +15,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION register_order_and_get_id( 
+CREATE OR REPLACE FUNCTION register_order( 
     p_customer_id INTEGER,
     p_items JSONB
 )
@@ -67,7 +69,7 @@ RETURNS TABLE (
     id INTEGER,
     customer_name VARCHAR(100),
     status VARCHAR(50),
-    order_date TIMESTAMP,
+    order_date TIMESTAMP WITH TIME ZONE,
     total_amount DECIMAL(10, 2)
 ) AS $$
 BEGIN

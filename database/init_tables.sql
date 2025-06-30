@@ -45,9 +45,9 @@ CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL REFERENCES users(id),
     status_id INTEGER NOT NULL REFERENCES order_statuses(id),
-    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expected_delivery_date TIMESTAMP,
-    actual_delivery_date TIMESTAMP,
+    order_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    expected_delivery_date TIMESTAMP WITH TIME ZONE,
+    actual_delivery_date TIMESTAMP WITH TIME ZONE,
     total_amount DECIMAL(10, 2) NOT NULL DEFAULT 0.00 CHECK (total_amount >= 0)
 );
 

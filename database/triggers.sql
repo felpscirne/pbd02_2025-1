@@ -1,3 +1,5 @@
+\c garciatec;
+
 CREATE OR REPLACE FUNCTION log_order_change()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -16,7 +18,7 @@ BEGIN
         END IF;
 
         IF NEW.total_amount IS DISTINCT FROM OLD.total_amount THEN
-            v_log_message := FORMAT('Order %s: Total amount changed from $%.2f to $%.2f.', NEW.id, OLD.total_amount, NEW.total_amount);
+            v_log_message := FORMAT('Order %s: Total amount changed from $%s to $%s.', NEW.id, OLD.total_amount::TEXT, NEW.total_amount::TEXT);
             INSERT INTO logs (order_id, affected_table, affected_column, old_value, new_value, action, notes)
             VALUES (NEW.id, 'orders', 'total_amount', OLD.total_amount::TEXT, NEW.total_amount::TEXT, 'UPDATE', v_log_message);
         END IF;
@@ -92,7 +94,6 @@ DECLARE
     v_old_status_name VARCHAR(50);
     v_new_status_name VARCHAR(50);
 BEGIN
-    --não faz nada se o status não mudou
     IF NEW.status_id = OLD.status_id THEN
         RETURN NEW;
     END IF;
@@ -100,17 +101,14 @@ BEGIN
     SELECT status_name INTO v_old_status_name FROM order_statuses WHERE id = OLD.status_id;
     SELECT status_name INTO v_new_status_name FROM order_statuses WHERE id = NEW.status_id;
 
-    --pedido finalizado e entregue
     IF v_old_status_name = 'Delivered' AND v_new_status_name IN ('In Preparation', 'Pending', 'Ready for Delivery', 'In Delivery') THEN
         RAISE EXCEPTION 'Cannot change a delivered order back to "%" status.', v_new_status_name;
     END IF;
 
-    --pedido cancelado
     IF v_old_status_name = 'Canceled' AND v_new_status_name NOT IN ('Canceled') THEN
         RAISE EXCEPTION 'Cannot reactivate a canceled order.';
     END IF;
 
-    --status nao andam para tras
     IF v_old_status_name = 'In Delivery' AND v_new_status_name IN ('In Preparation', 'Pending', 'Ready for Delivery') THEN
         RAISE EXCEPTION 'An order in delivery cannot revert to a previous status.';
     END IF;
