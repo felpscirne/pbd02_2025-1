@@ -21,7 +21,7 @@ const Pedidos = () => {
       .then((res) => res.json())
       .then((data) => {
         const sorted = data.sort(
-          (a, b) => new Date(b.order_date).getTime() - new Date(a.order_date).getTime()
+          (a: { order_date: string | number | Date; }, b: { order_date: string | number | Date; }) => new Date(b.order_date).getTime() - new Date(a.order_date).getTime()
         );
         setPedidos(sorted);
       })
